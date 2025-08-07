@@ -57,16 +57,23 @@ void *thread_scan(void *arg) {
 
 int scan_ports_threaded(scan_args_t *args) {
     pthread_t threads[args->max_threads];
+    memset(threads, 0, sizeof(threads));
 
     pthread_mutex_init(&args->lock, NULL);
     args->next_port = args->start_port;
 
     for (int i = 0; i < args->max_threads; i++) {
-        pthread_create(&threads[i], NULL, thread_scan, args);
+        int rc = pthread_create(&threads[i], NULL, thread_scan, args);
+        if (rc != 0) {
+            fprintf(stderr, "Error creating thread %d: %s\n", i, strerror(rc));
+            threads[i] = 0;
+        }
     }
 
     for (int i = 0; i < args->max_threads; i++) {
-        pthread_join(threads[i], NULL);
+        if (threads[i] != 0) {
+            pthread_join(threads[i], NULL);
+        }
     }
 
     pthread_mutex_destroy(&args->lock);
