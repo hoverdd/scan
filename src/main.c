@@ -40,14 +40,16 @@ int main(int argc, char *argv[]) {
     printf("Starting scan of host %s from port %d to %d (timeout: %dms)...\n\n",
        config.ip, config.start_port, config.end_port, config.timeout_ms);
     
+    printf("config.thread_count=%d\nMAX_THREADS_LIMIT=%d", config.thread_count, MAX_THREADS_LIMIT);
     clock_t start_time = clock();
     scan_args_t args = {
         .ip = config.ip,
         .timeout_ms = config.timeout_ms,
         .start_port = config.start_port,
         .end_port = config.end_port,
-        .max_threads = 100,
-    };
+        .max_threads = 100 
+        // before: .max_threads = config.thread_count > 0 ? config.thread_count : MAX_THREADS_LIMIT
+    }; 
     scan_ports_threaded(&args);
     clock_t end_time = clock();
     double duration = (double)(end_time - start_time) / CLOCKS_PER_SEC;
