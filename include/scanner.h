@@ -1,15 +1,18 @@
 #pragma once
-#define MAX_PROCESSES 128
 
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <sys/socket.h>
-#include <sys/wait.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <errno.h>
+#include "config.h"
 
-void scan_ports(const char *ip, int start_port, int end_port, int timeout_ms);
+/**
+ * Scans ports in the range specified in config.
+ * @param config Pointer to scan configuration struct.
+ */
+void scan_ports(scan_config_t *config);
+
+/**
+ * Scans a single TCP port.
+ * @param ip Target IP address.
+ * @param port Port number to scan.
+ * @param timeout_ms Timeout in milliseconds.
+ * @return 1 if port is open, 0 otherwise.
+ */
 int scan_single_port(const char *ip, int port, int timeout_ms);

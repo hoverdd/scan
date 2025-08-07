@@ -1,4 +1,9 @@
+#include <time.h>
+#include <stdio.h>
+
+#include "config.h"
 #include "banner.h"
+
 
 const char *get_current_time_string() {
     static char time_buffer[64];

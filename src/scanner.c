@@ -1,8 +1,18 @@
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <sys/socket.h>
+#include <sys/wait.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <errno.h>
+
 #include "scanner.h"
 
 int scan_single_port(const char *ip, int port, int timeout_ms) {
     struct sockaddr_in target;
-    memset(&target, 0, sizeof(target));
+    memset(&target, 0, sizeof(target)); // zero out the struct
     target.sin_family = AF_INET;
 
     if (inet_pton(AF_INET, ip, &target.sin_addr) <= 0) {
@@ -30,14 +40,14 @@ int scan_single_port(const char *ip, int port, int timeout_ms) {
     return 0;
 }
 
-void scan_ports(const char *ip, int start_port, int end_port, int timeout_ms) {
+void scan_ports(scan_config_t *config) {
     int active_procs = 0;
 
-    for (int port = start_port; port <= end_port; port++) {
+    for (int port = config->start_port; port <= config->end_port; port++) {
         pid_t pid = fork();
         if (pid == 0) {
             // child process
-            scan_single_port(ip, port, timeout_ms);
+            scan_single_port(config->ip, port, config->timeout_ms);
             fflush(stdout);
             exit(0);
         } else if (pid > 0) {
