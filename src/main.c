@@ -46,7 +46,7 @@ int main(int argc, char *argv[]) {
         .timeout_ms = config.timeout_ms,
         .start_port = config.start_port,
         .end_port = config.end_port,
-        .max_threads = config.thread_count > 0 ? config.thread_count : MAX_THREADS_LIMIT
+        .max_threads = 100,
     };
     scan_ports_threaded(&args);
     clock_t end_time = clock();
