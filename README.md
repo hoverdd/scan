@@ -24,21 +24,26 @@ make clean
 ## Usage
 
 ```bash
-./scan <ip> <start_port> <end_port> [-t <timeout_ms>]
+./scan <ip> <start_port> <end_port> [options]
+
+Options:
+  -h, --help           Show this help message and exit
+  -t, --timeout <ms>   Set the timeout for each port scan in milliseconds (default: 100)
+  -n, --threads <num>  Set the number of concurrent threads (default: 100)
 ```
 
-Example:
+## Testing
 
-```bash
-./scan 127.0.0.1 1 1024 -t 100
-```
+This scanner has been thoroughly tested on the following Linux distributions:
 
-Parameters:
+- Debian Bullseye  
+- Ubuntu 22.04 LTS  
+- Arch Linux  
+- Kali Linux  
+- Alpine Linux  
 
-- `<ip>` — target IPv4 address  
-- `<start_port>` — starting port number  
-- `<end_port>` — ending port number  
-- `-t <timeout_ms>` — optional timeout in milliseconds (default: 50)
+Testing included compiling, running with various parameters, and verifying stability.  
+Docker containers with clean base images were used to ensure portability and environment independence.
 
 ## License
 
