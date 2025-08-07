@@ -11,10 +11,10 @@ CFLAGS = -Wall -Wextra -O2 -I$(INCLUDE_DIR)
 all: scan
 
 scan: $(OBJS) 
-	$(CC) $(CFLAGS) -o scan $(OBJS)
+	$(CC) $(CFLAGS) -pthread -o scan $(OBJS)
 
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c | $(BUILD_DIR)
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) -pthread -c $< -o $@
 
 $(BUILD_DIR):
 	mkdir -p $(BUILD_DIR)
