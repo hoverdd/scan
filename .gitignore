@@ -1,0 +1,17 @@
+# Logs
+*.log
+
+# macOS metadata
+.DS_Store
+
+# Backup files
+*~
+
+# Binaries
+scan
+
+# Object files
+*.o
+
+# VSCode settings
+.vscode/
