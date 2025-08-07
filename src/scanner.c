@@ -14,11 +14,8 @@ int scan_single_port(const char *ip, int port, int timeout_ms) {
     struct sockaddr_in target;
     memset(&target, 0, sizeof(target)); // zero out the struct
     target.sin_family = AF_INET;
+    inet_pton(AF_INET, ip, &target.sin_addr);
 
-    if (inet_pton(AF_INET, ip, &target.sin_addr) <= 0) {
-        fprintf(stderr, "Invalid IP address: %s\n", ip);
-        return 1;
-    }
 
     int sock = socket(AF_INET, SOCK_STREAM, 0);
     if (sock < 0) return 1;
@@ -40,43 +37,39 @@ int scan_single_port(const char *ip, int port, int timeout_ms) {
     return 0;
 }
 
-void scan_ports(scan_config_t *config) {
-    int active_procs = 0;
+void *thread_scan(void *arg) {
+    scan_args_t *args = (scan_args_t *)arg;
 
-    for (int port = config->start_port; port <= config->end_port; port++) {
-        pid_t pid = fork();
-        if (pid == 0) {
-            // child process
-            scan_single_port(config->ip, port, config->timeout_ms);
-            fflush(stdout);
-            exit(0);
-        } else if (pid > 0) {
-            active_procs++;
+    while (1) {
+        pthread_mutex_lock(&args->lock);
+        if (args->next_port > args->end_port) {
+            pthread_mutex_unlock(&args->lock);
+            break;
+        } 
+        int port = args->next_port++;
+        pthread_mutex_unlock(&args->lock);
+        
+        // printf("Scanning port %d\n", port);
+        scan_single_port(args->ip, port, args->timeout_ms); 
+    }
+    return NULL;
+}
 
-            if (active_procs >= MAX_PROCESSES) {
-                wait(NULL); // reap one child
-                active_procs--;
-            }
-        } else {
-            perror("fork failed");
-        }
+int scan_ports_threaded(scan_args_t *args) {
+    pthread_t threads[args->max_threads];
+
+    pthread_mutex_init(&args->lock, NULL);
+    args->next_port = args->start_port;
+
+    for (int i = 0; i < args->max_threads; i++) {
+        pthread_create(&threads[i], NULL, thread_scan, args);
     }
 
-    int status;
-    pid_t wpid;
+    for (int i = 0; i < args->max_threads; i++) {
+        pthread_join(threads[i], NULL);
+    }
 
-    while ((wpid = waitpid(-1, &status, 0)) > 0) {
-        if (WIFEXITED(status)) {
-            int exit_status = WEXITSTATUS(status);
-            if (exit_status != 0) {
-                fprintf(stderr, "Child process exited with code %d\n", exit_status);
-            }
-        } else if (WIFSIGNALED(status)) {
-            int term_sig = WTERMSIG(status);
-            fprintf(stderr, "Child process %d terminated by signal %d\n", wpid, term_sig);
-        }
-    }
-    if (wpid == -1 && errno != ECHILD) {
-        perror("waitpid failed");
-    }
+    pthread_mutex_destroy(&args->lock);
+    
+    return 0;
 }
