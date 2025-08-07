@@ -40,7 +40,7 @@ int main(int argc, char *argv[]) {
     printf("Starting scan of host %s from port %d to %d (timeout: %dms)...\n\n",
        config.ip, config.start_port, config.end_port, config.timeout_ms);
     
-    printf("config.thread_count=%d\nMAX_THREADS_LIMIT=%d", config.thread_count, MAX_THREADS_LIMIT);
+    printf("config.thread_count=%d\nMAX_THREADS_LIMIT=%d\n", config.thread_count, MAX_THREADS_LIMIT);
     clock_t start_time = clock();
     scan_args_t args = {
         .ip = config.ip,
