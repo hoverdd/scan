@@ -2,7 +2,7 @@ INCLUDE_DIR = include
 SRC_DIR = src
 BUILD_DIR = build
 
-SRCS = $(SRC_DIR)/main.c $(SRC_DIR)/config.c $(SRC_DIR)/banner.c $(SRC_DIR)/scanner.c
+SRCS = $(SRC_DIR)/main.c $(SRC_DIR)/cli.c $(SRC_DIR)/banner.c $(SRC_DIR)/scanner.c $(SRC_DIR)/config.c
 OBJS = $(patsubst $(SRC_DIR)/%.c,$(BUILD_DIR)/%.o,$(SRCS))
 
 CC = gcc
