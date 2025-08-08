@@ -21,6 +21,20 @@ To clean build artifacts:
 make clean
 ```
 
+## Installation
+
+```bash
+make install
+```
+Installs the scanner binary to the system (usually `/usr/local/bin`).
+
+To remove the installed binary:
+
+```bash
+make uninstall
+```
+Removes the scanner binary from the system.
+
 ## Usage
 
 ```bash
