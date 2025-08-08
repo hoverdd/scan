@@ -14,26 +14,6 @@
 #define ARG_ERR_THREADS  4
 #define ARG_ERR_IP       5
 
-typedef struct {
-    const char *ip;
-    int start_port;
-    int end_port;
-    int timeout_ms;
-    int thread_count;
-} scan_config_t;
-
-typedef struct {
-    const char *ip;
-    int timeout_ms;
-    int start_port;
-    int end_port;
-    int next_port;
-    int max_threads;
-    int open_ports;
-    int closed_ports;
-    pthread_mutex_t lock; // Mutex to protect access to shared next_port
-} scan_args_t;
-
 typedef enum {
     HELP_REQUESTED,
     HELP_ERROR_ARGS,

@@ -2,9 +2,9 @@
 #include <stdio.h>
 
 #include "scanner.h"
+#include "config.h"
 #include "banner.h"
 #include "cli.h"
-
 
 int main(int argc, char *argv[]) {
     scan_config_t config;

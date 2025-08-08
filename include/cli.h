@@ -1,7 +1,7 @@
 #pragma once
 
 #include "cli.h"
-
+#include "scanner.h"
 
 /**
  * Prints usage/help message to stdout.

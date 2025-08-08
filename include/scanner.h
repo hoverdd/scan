@@ -1,6 +1,47 @@
 #pragma once
 
-#include "config.h"
+#include <pthread.h>
+
+typedef struct {
+    int *buffer;
+    int capacity;
+    int front;
+    int rear;
+    int size;
+    int closed;
+    pthread_mutex_t lock;
+    pthread_cond_t cond;
+} port_queue_t;
+
+void queue_init(port_queue_t *queue, int capacity);
+
+void queue_destroy(port_queue_t *queue);
+
+void queue_push(port_queue_t *queue, int port);
+
+int queue_pop(port_queue_t *queue, int *port);
+
+void queue_close(port_queue_t *queue);
+
+typedef struct {
+    const char *ip;
+    int start_port;
+    int end_port;
+    int timeout_ms;
+    int thread_count;
+} scan_config_t;
+
+typedef struct {
+    const char *ip;
+    int timeout_ms;
+    int start_port;
+    int end_port;
+    int max_threads;
+    int open_ports;
+    int closed_ports;
+    pthread_mutex_t lock; // Mutex to protect access to shared open and closed ports
+    port_queue_t queue;
+} scan_args_t;
 
 /**
  * Scans a single TCP port.
