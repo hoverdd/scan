@@ -44,7 +44,7 @@ int scan_single_port(const char *ip, int port, int timeout_ms) {
 void queue_init(port_queue_t *q, int capacity) {
     q->buffer = malloc(sizeof(int) * capacity);
     if (!q->buffer) {
-       fprintf(stderr, "Failed to allocate memory for port queue\n");
+        fprintf(stderr, "Failed to allocate memory for port queue\n");
         exit(EXIT_FAILURE); 
     }
     q->capacity = capacity;
