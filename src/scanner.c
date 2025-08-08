@@ -54,7 +54,7 @@ void *thread_scan(void *arg) {
         // printf("Scanning port %d\n", port);
         int result = scan_single_port(args->ip, port, args->timeout_ms); 
         pthread_mutex_lock(&args->lock);
-        if (result == 0)
+        if (result == 1)
             args->open_ports++;
         else
             args->closed_ports++;
