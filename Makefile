@@ -34,3 +34,9 @@ run_tests: test
 
 clean:
 	rm -rf $(BUILD_DIR) scan test_config
+
+install: scan
+	sudo cp scan /usr/local/bin/scan
+
+uninstall:
+	sudo rm -f /usr/local/bin/scan
