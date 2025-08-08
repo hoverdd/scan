@@ -18,7 +18,7 @@ int scan_single_port(const char *ip, int port, int timeout_ms) {
 
 
     int sock = socket(AF_INET, SOCK_STREAM, 0);
-    if (sock < 0) return 1;
+    if (sock < 0) return -1;
 
     target.sin_port = htons(port);
 
@@ -32,6 +32,8 @@ int scan_single_port(const char *ip, int port, int timeout_ms) {
     int res = connect(sock, (struct sockaddr *)&target, sizeof(target));
     if (res == 0) {
         printf("Port %d is OPEN\n", port);
+        close(sock);
+        return 1;
     }
     close(sock);
     return 0;
