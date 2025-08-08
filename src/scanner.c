@@ -50,7 +50,14 @@ void *thread_scan(void *arg) {
         pthread_mutex_unlock(&args->lock);
         
         // printf("Scanning port %d\n", port);
-        scan_single_port(args->ip, port, args->timeout_ms); 
+        int result = scan_single_port(args->ip, port, args->timeout_ms); 
+        pthread_mutex_lock(&args->lock);
+        if (result == 0)
+            args->open_ports++;
+        else
+            args->closed_ports++;
+        pthread_mutex_unlock(&args->lock);
+
     }
     return NULL;
 }
@@ -61,6 +68,9 @@ int scan_ports_threaded(scan_args_t *args) {
 
     pthread_mutex_init(&args->lock, NULL);
     args->next_port = args->start_port;
+
+    args->open_ports = 0;
+    args->closed_ports = 0;
 
     for (int i = 0; i < args->max_threads; i++) {
         int rc = pthread_create(&threads[i], NULL, thread_scan, args);
@@ -78,5 +88,6 @@ int scan_ports_threaded(scan_args_t *args) {
 
     pthread_mutex_destroy(&args->lock);
     
+    printf("\nScan completed: %d open, %d closed\n", args->open_ports, args->closed_ports);
     return 0;
 }

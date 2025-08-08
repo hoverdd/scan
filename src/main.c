@@ -15,13 +15,8 @@ int main(int argc, char *argv[]) {
         print_help(argv[0], HELP_REQUESTED);
         return 0;
     } else if (parse_result != ARG_SUCCESS) {
-        if (parse_result == ARG_ERR_COUNT) {
-            print_help(argv[0], HELP_ERROR_ARGS);
-        } else if (parse_result == ARG_ERR_PORT) {
-            print_help(argv[0], HELP_ERROR_ARGS);
-        } else if (parse_result == ARG_ERR_TIMEOUT) {
-            print_help(argv[0], HELP_ERROR_FLAG);
-        }
+        print_help(argv[0], 
+            (parse_result == ARG_ERR_TIMEOUT) ? HELP_ERROR_FLAG : HELP_ERROR_ARGS);
         return 1;
     }
 

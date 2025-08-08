@@ -29,6 +29,8 @@ typedef struct {
     int end_port;
     int next_port;
     int max_threads;
+    int open_ports;
+    int closed_ports;
     pthread_mutex_t lock; // Mutex to protect access to shared next_port
 } scan_args_t;
 
